@@ -1,0 +1,341 @@
+\documentclass[a4paper,10pt]{article}
+
+\usepackage{a4wide}
+\usepackage[latin1]{inputenc}
+\usepackage{fancyhdr}
+
+% % % Watermark
+\usepackage{eso-pic}
+\usepackage{type1cm}
+
+% % % Figures
+% \usepackage{listings}
+\usepackage{multirow}	% for tables
+\usepackage{graphicx}   % for including EPS
+\usepackage{rotating}
+% \usepackage{subfigure}
+
+% % % Special mathematical fonts
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amsthm}
+\usepackage{bm}
+
+\makeindex
+\makeatletter
+
+% --- FORMAT ---------------------------------------------------------
+
+% % % Page Style
+% Lamport, L., LaTeX : A Documentation Preparation System User's Guide and Reference Manual, Addison-Wesley Pub Co., 2nd edition, August 1994.
+\topmargin -2.0cm        % s. Lamport p.163
+\oddsidemargin -0.5cm   % s. Lamport p.163
+\evensidemargin -0.5cm  % wie oddsidemargin aber fr left-hand pages
+\textwidth 17.5cm
+\textheight 22.94cm 
+\parskip 7.2pt           % spacing zwischen paragraphen
+% \renewcommand{\baselinestretch}{2}\normalsize
+\parindent 0pt		 % Einrcken von Paragraphen
+\headheight 14pt
+\pagestyle{fancy}
+\lhead{}
+\chead{\bfseries}
+\rhead{\thepage}
+\lfoot{}
+\cfoot{}
+\rfoot{}
+\renewcommand{\textfloatsep}{1.5em}
+
+% % % Proofs: QED-Box
+\renewenvironment{proof}[1][\proofname]{\par
+  \pushQED{\qed}%
+  \normalfont \topsep6\p@\@plus6\p@\relax
+  \trivlist
+  \item[\hskip\labelsep
+        \itshape
+    #1\@addpunct{:}]\ignorespaces
+}{
+  \popQED\endtrivlist\@endpefalse
+}
+\makeatother
+
+% % % Alphabetic footnote marks
+\renewcommand{\thefootnote}{\alph{footnote}}
+
+% % % Watermark
+% \makeatletter
+% \AddToShipoutPicture{%
+% \setlength{\@tempdimb}{.5\paperwidth}%
+% \setlength{\@tempdimc}{.5\paperheight}%
+% \setlength{\unitlength}{1pt}%
+% \makebox(960,1470){%
+% \rotatebox{315}{%
+% \textcolor[gray]{0.75}{%
+% \fontsize{36pt}{72pt}\selectfont{\emph{D R A F T}}}}}
+% }
+% \makeatother
+
+
+
+% --- START DOCUMENT -------------------------------------------------
+
+\begin{document}
+
+\begin{center}
+\begin{huge}Support Vectors and the Margin in a Nutshell\end{huge}
+
+Andreas Maunz \\Freiburg Center for Data Analysis and Modelling (FDM), Hermann-Herder-Str. 3a, 79104 Freiburg, Germany
+\end{center}
+
+\begin{small}
+Leaving mathematical sophistication aside, this document briefly outlines the theory of support vectors and the concept of margin. It is a very condensed version of parts of chapters 1, 2, 7 and 9 of ``Learning with Kernels'' by Sch\"olkopf and Smola, 2002.
+Kernel functions are not explained and merely assumed to be useful for non-linear solutions in input space. Support Vector Machines make heavy use of Lagrangians to solve constrained optimization problems. However, this technique is also not explained in detail here.
+
+If not explicitly stated otherwise, $i,j$ always run over $1,\ldots,m$. 
+\end{small}
+
+\section{Optimal margin hyperplanes}
+Consider the class of hyperplanes $\langle \mathbf{w},\mathbf{x} \rangle + b = 0$ corresponding to binary decision functions 
+\begin{equation}
+ \label{dec-f}
+ sgn(\langle \mathbf{w},\mathbf{x} \rangle +b).
+\end{equation} 
+
+Based on empirical training data $(\mathbf{x}_i,y_i), \mathbf{x}_i \in \mathbb{R}^n, y \in \{-1,1\}$, one can find a unique optimal hyperplane which is the solution of the following optimization problem:
+\begin{equation}
+ \underset{\mathbf{w},b}{max} \;\underset{i}{min} \;\{||\mathbf{x}-\mathbf{x}_i|| \;| \langle \mathbf{w}, \mathbf{x}\rangle+b=0\}.
+\end{equation} 
+In words: find the hyperplane that has maximum distance to the nearest training vectors (\textit{support vectors}). This can be achieved by minimizing $\mathbf{w}$ using the \textit{objective function}
+\begin{equation}
+ \label{obj-f1}
+ \underset{\mathbf{w}}{min} \;\frac{1}{2}||\mathbf{w}||^2,
+\end{equation} 
+subject to 
+\begin{equation}
+ \label{constr}
+y_i(\langle \mathbf{w},\mathbf{x}_i\rangle +b) \ge 1.
+\end{equation} 
+The left-hand side of (\ref{constr}) divided by $||\mathbf{w}||$ gives the distance between $\mathbf{x}_i$ and the hyperplane and minimizing $||\mathbf{w}||$ thus maximizes this distance, called \textit{margin}\footnote{Note that all support vectors then have distance of $\frac{1}{||\mathbf{w}||}$ to the hyperplane.}. The following Lagrangian can be used to solve this optimization problem:
+\begin{equation}
+ \label{Lagrange}
+ L(\mathbf{w},b,\bm{\alpha}) = \frac{1}{2}||\mathbf{w}||^2 - \sum_{i} \alpha_i(y_i(\langle \mathbf{w},\mathbf{x}_i\rangle +b)-1)
+\end{equation} 
+We want the solution that maximizes (\ref{Lagrange}) over the $\alpha_i$ and minimizes (\ref{Lagrange}) over $\mathbf{w},b$. The $\alpha_i$ (\textit{primal variables}) are weights for the $\mathbf{x}_i$. If $\mathbf{x}_i$ violates (\ref{constr}) then (\ref{Lagrange}) can be increased by increasing $\alpha_i$. Therefore, $\mathbf{w}$ and $b$ will have to change to satisfy more constraints and decrease $||\mathbf{w}||$. Note that the $\alpha_i$ for which the $\mathbf{x}_i$ fulfill (\ref{constr}) but are not precisely met as equalities have to be 0 to maximize (\ref{Lagrange}), i.e. only the support vectors have non-zero $\alpha$-weights.
+
+Lagrangians are solved by finding zero points of their partial derivatives (\textit{saddle point condition}). It is instructive to calculate $\frac{d}{db}L(\mathbf{w},b,\bm{\alpha})=0$ and $\frac{d}{d\mathbf{w}}L(\mathbf{w},b,\bm{\alpha})=0$ manually\footnote{The reason why (\ref{obj-f1}) not directly minimizes $||\mathbf{w}||$ will become clear here.}. This leads to
+\begin{equation}
+\label{subst1}
+ \sum_i \alpha_i y_i = 0,
+\end{equation} 
+and 
+\begin{equation}
+\label{subst2}
+ \mathbf{w}=\sum_i \alpha_i y_i \mathbf{x}_i,
+\end{equation} 
+repectively. The derivative (\ref{subst2}) implies that the solution vector has an expansion in terms of some training vectors, namely those with non-zero $\alpha$-weight: the \textit{support vectors}. Substituting (\ref{subst1}) and (\ref{subst2}) into (\ref{Lagrange}) yields
+\begin{equation}
+\label{dual}
+ \underset{\alpha}{max}\;W(\alpha) = \sum_i \alpha_i -\frac{1}{2}\sum_{i,j}\alpha_i \alpha_j y_i y_j \langle \mathbf{x}_i, \mathbf{x_j}\rangle,
+\end{equation} 
+subject to $\alpha_i\ge 0$ and $\sum_i \alpha_i y_i = 0$, cf. (\ref{subst1}), the \textit{dual optimization problem}. In practice, however, the kernel trick is used, modifying (\ref{dual}) to\footnote{Note that the $x_i$ need not be vectors from an inner-product space anymore, extending the approach to all inputs that a positive definite kernel function $k$ is defined for.}
+\begin{equation}
+\label{dual_k}
+ \underset{\alpha}{max}\;W(\alpha) = \sum_i \alpha_i -\frac{1}{2}\sum_{i,j}\alpha_i \alpha_j y_i y_j k(x_i, x_j).
+\end{equation} 
+Using a kernel function lifts the algorithm to a higher dimensional \textit{feature space}, thus enabling a non-linear solution in input space.
+The decision function (\ref{dec-f}) can be rewritten due to (\ref{subst2}) and the kernel trick into
+\begin{equation}
+ \label{dec-f2}
+ f(x) = sgn(\sum_i \alpha_i y_i k(x_i,x) + b).
+\end{equation} 
+To estimate $b$, one can make use of the fact that only support vectors have non-zero $\alpha$-weight (\textit{KKT conditions}):
+\begin{equation}
+\label{thresh}
+ y_j = \sum_i \alpha_i y_i k(x_i,x) + b.
+\end{equation} 
+Thus, $b$ can be obtained by e.g. averaging over all $y_j$, which completes the decision function.
+
+\section{Soft margin hyperplanes}
+\subsection{The important role of the margin}
+If a seperating hyperplane does not exist, the constraint (\ref{constr}) has to be relaxed with \textit{slack variables} $\xi_i$:
+\begin{equation}
+ \label{constr-relax}
+y_i(\langle \mathbf{w},\mathbf{x}_i\rangle +b) \ge 1-\xi_i,
+\end{equation} 
+subject to $\xi_i\ge 0$. The idea is to allow points to lie within the margin or being misclassified to improve robustness towards outliers.
+
+Soft margin hyperplanes are a generalization of optimal margin hyperplanes. The support vectors for the latter lie exactly on the margin (the rest contributes nothing to the solution), while for the former, support vectors are also allowed to lie \textit{inside} the margin. The latter support vectors are called \textit{margin errors}.
+
+To allow for margin errors, we will see that the $\alpha$-values have to be constrained, i.e. $0\le\alpha_i\le b$ for some upper bound $b$. If $\alpha_i=b$ (or $\alpha_i=0$), we call $\alpha_i$ \textit{at bound}.
+
+
+\subsection{C-SVC}
+To allow for margin errors modify the objective function (\ref{obj-f1}) to
+\begin{equation}
+ \label{obj-f2}
+ \underset{\mathbf{w},\xi_i}{min} \;\frac{1}{2}||\mathbf{w}||^2 + \frac{C}{m} \sum_i \xi_i,
+\end{equation} 
+subject to (\ref{constr-relax}),
+where $C>0$ determines the tradeoff between margin maximization and error minimization. Transforming this into a dual yields again (\ref{dual_k}), but subject to the new constraints $0\le \alpha_i\le \frac{C}{m}$ and $\sum_i \alpha_i y_i = 0$. The solution can also be shown to have expansion (\ref{subst2}) and decision function (\ref{dec-f2}). The threshold $b$ can be evaluated as in (\ref{thresh}), too, but only for support vectors $x_i$ (defined by meeting the equality of (\ref{constr-relax})) which additionally have $\xi_i=0$, i.e. that sit directly on the edge of the margin.
+
+\subsection{$\nu$-SVC}
+The parameter $C$ is rather unintuitive and hard to choose a priori. A modification is the following objective function, governed by a parameter $\nu$:
+\begin{equation}
+ \label{obj-f3}
+ \underset{\mathbf{w},\xi_i,\rho,b}{min} \quad\frac{1}{2}||\mathbf{w}||^2 -\nu \rho + \frac{1}{m} \sum_i \xi_i,
+\end{equation} 
+subject to the constraints $y_i(\langle\mathbf{x}_i,\mathbf{w}\rangle+b)\ge\rho-\xi_i$ and $\xi_i \ge 0$, as well as $\rho \ge 0$. To understand the role of $\rho$, observe that for $\bm{\xi}=0$ the first constraint states that the two classes be separated by a margin of width $\frac{2\rho}{||w||}$. 
+
+The problem can be formulated as the corresponding Lagrangian
+\begin{equation}
+ \label{nu-svr-la}
+ \frac{1}{2}||w||^2-\nu\rho+\frac{1}{m}\sum_i\xi_i-\sum_i(\alpha_i(y_i(\langle\mathbf{x}_i,\mathbf{w}\rangle+b)-\rho+\xi_i)+\beta_i\xi_i)-\delta\rho.
+\end{equation} 
+Setting the partial derivatives for the four primal variables $\mathbf{w}, \xi, b, \rho$ to 0 yields the four Lagrangian constraints $\mathbf{w}=\sum_i\alpha_i y_i\mathbf{x}_i$, $\alpha_i+\beta_i=\frac{1}{m}$, $\sum_i\alpha_i y_i=0$ and $\sum_i\alpha_i-\delta=\nu$.
+Injection of those constraints into (\ref{nu-svr-la}) yields
+\begin{equation}
+\label{dual-nu}
+ \underset{\alpha}{max}\;W(\alpha) = -\frac{1}{2}\sum_{i,j}\alpha_i \alpha_j y_i y_j k(x_i, x_j),
+\end{equation} 
+subject to $0 \le \alpha_i \le \frac{1}{m}$, $\sum_i \alpha_i y_i = 0$ and $\sum_i \alpha_i \ge \nu$. The solution can also be shown to have decision function (\ref{dec-f2}).
+
+If a $\nu$-SVC run yields a positive margin ($\rho>0$, and therefore $\sum_i \alpha_i = \nu$ according to the fourth Lagrangian constraint), then $\nu$ is 
+\begin{itemize}
+ \item an \textit{upper bound on the fraction of margin errors}: each $\alpha_i$ can be at most $\frac{1}{m}$ and only a fraction $\nu$ of the examples can have this $\alpha$-value, which all margin errors do.
+ \item also a \textit{lower bound on the fraction of support vectors}: since every sv can have an alpha-value of at most $\frac{1}{m}$, there must be at least $\nu m$ of them (including margin errors which are also support vectors). \\
+\end{itemize}
+However, for large datasets, the fraction of support vectors sitting directly on the margin can be neglected and the two numbers converge.
+
+\section{SV-Regression}
+To model quantitative targets, proceed analogous to the qualitative case. At each point, allow an error $\epsilon$. Everything above $\epsilon$ is covered in slack variables $\xi_i^{(*)}$, which are penalized in the objective function \footnote{The notation $x^{(*)}$ references the variables $x$ and $x^{*}$ at the same time.}.
+Specifically, for $\mathbf{y} \in \mathbb{R}$, use the $\epsilon$\textit{-insensitive loss function} to preserve sparse representation of the solution:
+\begin{equation}
+ |y-f(\mathbf{x})|_\epsilon = max\{0,|y-f(\mathbf{x})|-\epsilon\}
+\end{equation}
+This takes the form of the normal $|\cdot|$ function with $y$-intercept of $-\epsilon$, but with a \textit{zero-error-tube} of width $\epsilon$ around the center. Therefore, errors inside the tube are not penalized. Note, that this ``swaps'' the penalization area: now the margin errors lie in the area \textit{outside} the tube. Consequently, points \textit{inside} the tube do not appear in the extension of the solution.
+
+\subsection{$\epsilon$-SVR}
+For a fixed $\epsilon$, the corresponding constrained optimization problem is analogous to $\epsilon$-SVC given by
+\begin{equation}
+ \label{eps-svr}
+ \underset{\mathbf{w}, \mathbf{\xi}^{(*)},b}{min}\quad \frac{1}{2}||\mathbf{w}||^2 + C \frac{1}{m}\sum_i (\xi_i+\xi_i^*),
+\end{equation} 
+subject to
+\begin{equation}
+ \label{eps-svr-constr}
+ \begin{split}
+  (\langle\mathbf{w},\mathbf{x}_i\rangle+b)-y_i &\le \epsilon + \xi_i,\\
+  (y_i-\langle\mathbf{w},\mathbf{x}_i\rangle+b) &\le \epsilon + \xi_i^*,\\
+  \xi_i^{(*)} &\ge 0.
+ \end{split}
+\end{equation} 
+Note, that for $|\langle\mathbf{w},\mathbf{x}_i\rangle+b)-y_i| \le \epsilon$, we have $\xi_i^{(*)} = 0$. Transforming (\ref{eps-svr}) and constraints (\ref{eps-svr-constr}) into a Lagrangian yields
+\begin{equation}
+\label{eps-svr-lagr}
+\begin{split}
+ \frac{1}{2} &||\mathbf{w}||^2 + \frac{C}{m}\sum_i (\xi_i + \xi_i^*) - \sum_i (\eta_i\xi_i + \eta_i^*\xi_i^*)\\
+             & -\sum_i \alpha_i(\epsilon + \xi_i + y_i - \langle\mathbf{w},\mathbf{x}_i\rangle - b)\\
+             & -\sum_i \alpha_i^*(\epsilon + \xi_i - y_i + \langle\mathbf{w},\mathbf{x}_i\rangle + b),
+\end{split}
+\end{equation}
+which must be minimized with respect to the primal variables $\mathbf{w},b,\xi_i^{(*)}$ and maximized with respect to the dual variables $\alpha_i^{(*)}$. Hence, the saddle point condition yields the three constraints $\sum_i(\alpha_i-\alpha_i^*)=0$, $\mathbf{w}-\sum_i(\alpha_i^*-\alpha_i)\mathbf{x}_i=0$ and $\frac{C}{m}-\alpha_i^{(*)} -\eta_i^{(*)}= 0$ which can be inserted into (\ref{eps-svr-lagr}), yielding the following dual problem:
+\begin{equation}
+ \label{eps-svr-dual}
+ \begin{split}
+  \underset{\bm{\alpha^{(*)}}}{max}\quad &-\frac{1}{2}\sum_{i,j}(\alpha_i^*-\alpha_i)(\alpha_j^*-\alpha_j)\langle\mathbf{x}_i,\mathbf{x_j}\rangle\\
+  \quad &-\epsilon\sum_{i}(\alpha_i^*+\alpha_i)+\sum_{i}y_i(\alpha_i^*-\alpha_i),
+ \end{split}
+\end{equation} 
+subject to $\sum_i(\alpha_i-\alpha_i^*)=0$ and $\alpha_i^{(*)} \in [0,\frac{C}{m}]$. The solution has again an expansion in terms of support vectors: 
+\begin{equation}
+ f(\mathbf{x})=\sum_i(\alpha_i^*-\alpha_i)\langle\mathbf{x},\mathbf{x}_i\rangle + b.
+\end{equation} 
+At the point of solution, due to the KKT conditions, the product between dual variables and constraints has to vanish:
+\begin{equation}
+\label{eps-svr-kkt}
+ \begin{split}
+  &\alpha_i(\epsilon+\xi_i-y_i+ \langle\mathbf{w},\mathbf{x}_i\rangle +b) = 0\qquad\text{and}\\
+  &\alpha_i^*(\epsilon+\xi_i^*+y_i- \langle\mathbf{w},\mathbf{x}_i\rangle -b) = 0\;,
+ \end{split}
+\end{equation} 
+as well as 
+\begin{equation}
+ \begin{split}
+  &(\frac{C}{m}-\alpha_i)\; \xi_i = 0\qquad\text{and} \\
+  &(\frac{C}{m}-\alpha_i^*)\; \xi_i^{(*)} = 0.
+ \end{split}
+\end{equation}
+The parameter $\epsilon$ has taken the role of the margin parameter $\rho$ here. Support vectors lie either directly on the edge of the tube or outside the tube. 
+
+Condition (\ref{eps-svr-kkt}) allows to compute $b$ by exploiting the former points, i.e. the cases where $0<\alpha_i^{(*)}<\frac{C}{m}$ due to the second factor of (\ref{eps-svr-kkt}) being 0, but additionally $\xi_i^{(*)}=0$ holds for these cases, too. 
+Furthermore, conclude that only points with $\alpha_i^{(*)}=\frac{C}{m}$ can have $\xi_i^{(*)} > 0$, i.e. can lie outside the tube and there is no $i$ for which $\alpha_i>0$ \textit{and} $\alpha_i^*>0$ (c.f. proof in section \ref{Proofs}).
+
+\subsection{$\nu$-SVR}
+Instead of using a fixed $\epsilon$, optimize $\epsilon$. Use as objective function:
+\begin{equation}
+ \label{nu-svr}
+ \underset{\mathbf{w}, \mathbf{\xi}^{(*)},\epsilon,b}{min}\quad \frac{1}{2}||\mathbf{w}||^2 + C\;(\nu \epsilon + \frac{1}{m}\sum_i (\xi_i+\xi_i^*)),
+\end{equation} 
+subject to
+\begin{equation}
+ \label{nu-svr-constr}
+ \begin{split}
+  (\langle\mathbf{w},\mathbf{x}_i\rangle+b)-y_i &\le \epsilon + \xi_i,\\
+  (y_i-\langle\mathbf{w},\mathbf{x}_i\rangle+b) &\le \epsilon + \xi_i^*,\\
+  \xi_i^{(*)} &\ge 0, \\
+  \epsilon &\ge 0.
+ \end{split}
+\end{equation} 
+Note the similarity to $\epsilon$-SVR. Transforming (\ref{nu-svr}) and constraints (\ref{nu-svr-constr}) into a Lagrangian yields
+\begin{equation}
+\begin{split}
+ \frac{1}{2} &||\mathbf{w}||^2 + C\nu\epsilon + \frac{C}{m}\sum_i (\xi_i + \xi_i^*) - \sum_i (\eta_i\xi_i + \eta_i^*\xi_i^*)\\
+             & -\sum_i \alpha_i(\epsilon + \xi_i + y_i - \langle\mathbf{w},\mathbf{x}_i\rangle - b)\\
+             & -\sum_i \alpha_i^*(\epsilon + \xi_i - y_i + \langle\mathbf{w},\mathbf{x}_i\rangle + b)
+\end{split}
+\end{equation}
+The saddle point condition yields this time the shorter dual:
+\begin{equation}
+ \label{nu-svr-dual}
+ \begin{split}
+  \underset{\bm{\alpha^{(*)}}}{max}\quad &-\frac{1}{2}\sum_{i,j}(\alpha_i^*-\alpha_i)(\alpha_j^*-\alpha_j)\langle\mathbf{x}_i,\mathbf{x_j}\rangle\\
+  \quad &+\sum_{i}y_i(\alpha_i^*-\alpha_i),
+ \end{split}
+\end{equation} 
+subject to $\sum_i(\alpha_i-\alpha_i^*)=0$, $\alpha_i^{(*)} \in [0,\frac{C}{m}]$ and $\sum_i(\alpha_i+\alpha_i^*)\le Cv$.
+
+Again, $b$ and this time also $\epsilon$ can be computed using the KKT conditions (\ref{eps-svr-kkt}), i.e. computing thickness and vertical position of the tube by using points that sit exactly on the border of the tube.
+
+Again, $\nu$ is 
+\begin{itemize}
+ \item an \textit{upper bound on the fraction of margin errors}
+ \item a \textit{lower bound on the fraction of support vectors}
+\end{itemize}
+The formal proof is analogous to the corresponding proof of $\nu$-SVC, however, the following ``sloppy'' argumentation is more instructive:\\
+The first statement can be seen by observing that, for increasing $\epsilon$, the first term in $\nu \epsilon + \frac{1}{m}\sum_i(\xi_i+\xi_i^*)$ increases proportionally to $\nu$ (i.e. with constant gradient $g_1 = \nu$), while the second term decreases (monotonically and) proportionally to the fraction of margin errors $h_1$ (the points on the edge of the tube cost nothing), inducing a varying gradient $g_2=-h_1$. Since the terms are added up, a minimum of the sum can not be found until $g_1$ + $g_2 = 0$ (the combined gradient is the sum of the single gradients), i.e. $h_1=\nu$.\\
+Analogously, for the second statement, observe that, for decreasing $\epsilon$, the first term decreases with gradient $-\nu$ while the second term increases (monotonically and) with a gradient that equals the fraction of support vectors (the points on the edge gain nothing) and which must reach $\nu$ for the minimum.
+
+\section{Proofs}
+\label{Proofs}
+\subsection{Problem 9.1}
+\begin{proof}[For $\epsilon>0$ the solution of the $\epsilon$-SVR dual satisfies $\alpha_i \alpha_i^* = 0$]
+Assume the contrary, i.e. $\alpha_i>0$ and $\alpha_i^*>0$ for $\epsilon>0$. It follows from (\ref{eps-svr-kkt}) that
+\begin{equation*}
+\begin{split}
+ (i) \qquad \epsilon + \xi_i &= y_i-\langle\mathbf{w},\mathbf{x}_i\rangle-b \qquad \text{and}\\
+ (ii) \qquad \epsilon + \xi_i^* &= \langle\mathbf{w},\mathbf{x}_i\rangle+b - y_i.
+\end{split}
+\end{equation*} 
+Inserting $(ii)$ in $(i)$ by substituting $y_i$ yields
+\begin{equation*}
+ \begin{split}
+ \epsilon+\xi_i &= -\epsilon-\xi_i^* \qquad\qquad \Leftrightarrow \\
+ \epsilon &= -\frac{1}{2} (\xi_i+\xi_i^*).
+ \end{split}
+\end{equation*}
+Since $\xi_i^{(*)}\ge 0$, it follows that $\epsilon \le 0$, which is a contradiction.
+\end{proof}
+
+
+\end{document} 
