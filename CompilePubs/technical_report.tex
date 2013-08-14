@@ -1,0 +1,109 @@
+\documentclass[a4paper,10pt]{article}
+
+\usepackage{a4wide}
+\usepackage[latin1]{inputenc}
+\usepackage{fancyhdr}
+
+% % % Watermark
+\usepackage{eso-pic}
+\usepackage{type1cm}
+
+% % % Figures
+% \usepackage{listings}
+\usepackage{multirow}	% for tables
+\usepackage{graphicx}   % for including EPS
+\usepackage{rotating}
+% \usepackage{subfigure}
+
+% % % Special mathematical fonts
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amsthm}
+\usepackage{bm}
+\usepackage{srcltx}
+\usepackage{setspace}
+
+
+
+\usepackage[square, numbers, comma, sort&compress]{natbib}  % Use the ``Natbib'' style for the references in the Bibliography
+
+
+\makeindex
+\makeatletter
+
+% --- FORMAT ---------------------------------------------------------
+
+% % % Page Style
+% Lamport, L., LaTeX : A Documentation Preparation System User's Guide and Reference Manual, Addison-Wesley Pub Co., 2nd edition, August 1994.
+\topmargin -2.0cm        % s. Lamport p.163
+\oddsidemargin -0.5cm   % s. Lamport p.163
+\evensidemargin -0.5cm  % wie oddsidemargin aber fr left-hand pages
+\textwidth 17.5cm
+\textheight 22.94cm 
+\parskip 7.2pt           % spacing zwischen paragraphen
+% \renewcommand{\baselinestretch}{2}\normalsize
+\parindent 0pt		 % Einrcken von Paragraphen
+\headheight 14pt
+\pagestyle{fancy}
+\lhead{}
+\chead{\bfseries}
+\rhead{\thepage}
+\lfoot{}
+\cfoot{}
+\rfoot{}
+\renewcommand{\textfloatsep}{1.5em}
+
+% % % Proofs: QED-Box
+\renewenvironment{proof}[1][\proofname]{\par
+  \pushQED{\qed}%
+  \normalfont \topsep6\p@\@plus6\p@\relax
+  \trivlist
+  \item[\hskip\labelsep
+        \itshape
+    #1\@addpunct{:}]\ignorespaces
+}{
+  \popQED\endtrivlist\@endpefalse
+}
+\makeatother
+
+% % % Alphabetic footnote marks
+\renewcommand{\thefootnote}{\alph{footnote}}
+
+% % % Watermark
+% \makeatletter
+% \AddToShipoutPicture{%
+% \setlength{\@tempdimb}{.5\paperwidth}%
+% \setlength{\@tempdimc}{.5\paperheight}%
+% \setlength{\unitlength}{1pt}%
+% \makebox(960,1470){%
+% \rotatebox{315}{%
+% \textcolor[gray]{0.75}{%
+% \fontsize{36pt}{72pt}\selectfont{\emph{D R A F T}}}}}
+% }
+% \makeatother
+
+
+
+% --- START DOCUMENT -------------------------------------------------
+
+\begin{document}
+\setstretch{1.1}
+
+\begin{center}
+\begin{huge}Technical Report\end{huge}
+
+FirstName LastName\\Institute for X, Street, City
+\end{center}
+
+\begin{small}
+Abstract
+\end{small}
+
+\cite{maunz13outofbag,maunz13lazar,maunz11efficient,maunz10latent,suenderhauf10combinatorial,hardy10collaborative,maunz09largescale,maunz09prediction,hammann09development,maunz08prediction}
+
+
+\bibliographystyle{plain}
+\bibliography{am}
+
+\end{document} 

@@ -1,0 +1,76 @@
+\begin{thebibliography}{10}
+
+\bibitem{hammann09development}
+Felix Hammann, Heike Gutmann, Ursula Jecklin, Andreas Maunz, Christoph Helma,
+  and J\"urgen Drewe.
+\newblock {D}evelopment of {D}ecision {T}ree {M}odels for {S}ubstrates,
+  {I}nhibitors, and {I}nducers of p-{G}lycoprotein.
+\newblock {\em Current Drug Metabolism}, 10:339--346, 2009.
+
+\bibitem{hardy10collaborative}
+Barry Hardy, Nicki Douglas, Christoph Helma, Micha Rautenberg, Nina Jeliazkova,
+  Vedrin Jeliazkov, Ivelina Nikolova, Romualdo Benigni, Olga Tcheremenskaia,
+  Stefan Kramer, Tobias Girschick, Fabian Buchwald, Joerg Wicker, Andreas
+  Karwath, Martin Gutlein, Andreas Maunz, Haralambos Sarimveis, Georgia
+  Melagraki, Antreas Afantitis, Pantelis Sopasakis, David Gallagher, Vladimir
+  Poroikov, Dmitry Filimonov, Alexey Zakharov, Alexey Lagunin, Tatyana
+  Gloriozova, Sergey Novikov, Natalia Skvortsova, Dmitry Druzhilovsky, Sunil
+  Chawla, Indira Ghosh, Surajit Ray, Hitesh Patel, and Sylvia Escher.
+\newblock {C}ollaborative {D}evelopment of {P}redictive {T}oxicology
+  {A}pplications.
+\newblock {\em Journal of Cheminformatics}, 2(1):7, 2010.
+
+\bibitem{maunz13lazar}
+Andreas Maunz, Martin G\"utlein, Micha Rautenberg, David Vorgrimmler, Denis
+  Gebele, and Christoph Helma.
+\newblock lazar: {A} modular {P}redictive {T}oxicology {F}ramework.
+\newblock {\em Frontiers in Pharmacology}, 4(38), 2013.
+
+\bibitem{maunz08prediction}
+Andreas Maunz and Christoph Helma.
+\newblock {P}rediction of {C}hemical {T}oxicity with {L}ocal {S}upport {V}ector
+  {R}egression and {A}ctivity-specific {K}ernels.
+\newblock {\em SAR and QSAR in Environmental Research}, 19(5-6):413--431, 2008.
+
+\bibitem{maunz09prediction}
+Andreas Maunz and Christoph Helma.
+\newblock {P}rediction of {T}oxic {E}ffects of {P}harmaceutical {A}gents.
+\newblock In Konstantin~V. Balakin, editor, {\em Pharmaceutical Data Mining},
+  chapter~5, pages 145--173. Wiley, New York, 2009.
+
+\bibitem{maunz10latent}
+Andreas Maunz, Christoph Helma, Tobias Cramer, and Stefan Kramer.
+\newblock {L}atent {S}tructure {P}attern {M}ining.
+\newblock In Jos{\'e} Balc{\'a}zar, Francesco Bonchi, Aristides Gionis, and
+  Mich{\`e}le Sebag, editors, {\em Machine Learning and Knowledge Discovery in
+  Databases}, volume 6322 of {\em Lecture Notes in Computer Science}, pages
+  353--368. Springer Berlin / Heidelberg, 2010.
+
+\bibitem{maunz09largescale}
+Andreas Maunz, Christoph Helma, and Stefan Kramer.
+\newblock {L}arge-{S}cale {G}raph {M}ining {U}sing {B}ackbone {R}efinement
+  {C}lasses.
+\newblock In {\em KDD '09: Proceedings of the 15th ACM SIGKDD International
+  Conference on Knowledge Discovery and Data Mining}, pages 617--626, New York,
+  NY, USA, 2009. ACM.
+
+\bibitem{maunz11efficient}
+Andreas Maunz, Christoph Helma, and Stefan Kramer.
+\newblock {E}fficient {M}ining for {S}tructurally {D}iverse {S}ubgraph
+  {P}atterns in {L}arge {M}olecular {D}atabases.
+\newblock {\em Machine Learning}, 83(2):193--218, 2011.
+
+\bibitem{maunz13outofbag}
+Andreas Maunz, David Vorgrimmler, and Christoph Helma.
+\newblock {O}ut-of-{B}ag {D}iscriminative {G}raph {M}ining.
+\newblock In {\em Proceedings of the 28th Symposium On Applied Computing,
+  accepted}, 2013.
+
+\bibitem{suenderhauf10combinatorial}
+Claudia Suenderhauf, Felix Hammann, Andreas Maunz, Christoph Helma, and J\"org
+  Huwyler.
+\newblock Combinatorial {Q}{S}{A}{R} {M}odeling of {H}uman {I}ntestinal
+  {A}bsorption.
+\newblock {\em Molecular Pharmaceutics}, 8(1):213--224, 2011.
+
+\end{thebibliography}
